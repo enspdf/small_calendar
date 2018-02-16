@@ -25,8 +25,9 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
                   child: new Container(
                     color: Colors.white,
                     width: 200.0,
-
                     child: new SmallCalendar(
+                      initialYear: new DateTime.now().year,
+                      initialMonth: new DateTime.now().month,
                       controller: new SmallCalendarController(),
                     ),
                   ),

@@ -4,11 +4,14 @@ import 'package:meta/meta.dart';
 import 'widgets/weekday_indicator.dart';
 
 import 'generator.dart';
+import 'data.dart';
 
 class SmallCalendarTab extends StatelessWidget {
   final bool showDayIndication;
   final Map<int, String> dayNames;
   final int firstWeekday;
+
+  final Month month;
 
   final double weekdayIndicationHeight;
 
@@ -17,6 +20,7 @@ class SmallCalendarTab extends StatelessWidget {
     @required this.dayNames,
     @required this.firstWeekday,
     @required this.weekdayIndicationHeight,
+    @required this.month,
   });
 
   double calculateWidthOfDay(BuildContext context) {
@@ -53,6 +57,14 @@ class SmallCalendarTab extends StatelessWidget {
         ),
       );
     }
+
+    widgets.add(
+      new Positioned(
+        top: 50.0,
+        left: 50.0,
+        child: new Text("${month.year}.${month.month}"),
+      ),
+    );
 
     return new Stack(
       children: widgets,

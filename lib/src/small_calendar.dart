@@ -4,11 +4,15 @@ import 'package:meta/meta.dart';
 import 'small_calendar_controller.dart';
 import 'small_calendar_tab.dart';
 import 'data.dart';
+import 'generator.dart';
 
 class SmallCalendar extends StatefulWidget {
   final int totalNumberOfMonths;
   final bool showDayIndication;
   final int firstWeekday;
+
+  final initialYear;
+  final initialMonth;
 
   final Map<int, String> dayNamesMap;
 
@@ -20,6 +24,8 @@ class SmallCalendar extends StatefulWidget {
     this.totalNumberOfMonths = 120,
     this.showDayIndication = true,
     this.firstWeekday = DateTime.MONDAY,
+    @required this.initialYear,
+    @required this.initialMonth,
     this.dayNamesMap = oneLetterEnglishDayNames,
     this.weekdayIndicationHeight = 20.0,
     @required this.controller,
@@ -32,19 +38,28 @@ class SmallCalendar extends StatefulWidget {
 
 class _SmallCalendarState extends State<SmallCalendar> {
   List<Widget> generateTabs() {
-    List<Widget> r = <Widget>[];
+    Month firstMonth = generateMonthXMonthsAgo(
+        initialMonth, widget.totalNumberOfMonths - initialIndex);
 
-    for (int i = 0; i < widget.totalNumberOfMonths; i++) {
-      r.add(new SmallCalendarTab(
-        showDayIndication: widget.showDayIndication,
-        dayNames: widget.dayNamesMap,
-        firstWeekday: widget.firstWeekday,
-        weekdayIndicationHeight: widget.weekdayIndicationHeight,
-      ));
-    }
-
-    return r;
+    return generateMonths(firstMonth, widget.totalNumberOfMonths)
+        .map(
+          (month) => new SmallCalendarTab(
+                showDayIndication: widget.showDayIndication,
+                dayNames: widget.dayNamesMap,
+                firstWeekday: widget.firstWeekday,
+                weekdayIndicationHeight: widget.weekdayIndicationHeight,
+                month: month,
+              ),
+        )
+        .toList();
   }
+
+  int get initialIndex => widget.totalNumberOfMonths ~/ 2;
+
+  Month get initialMonth => new Month(
+        widget.initialYear,
+        widget.initialMonth,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +67,7 @@ class _SmallCalendarState extends State<SmallCalendar> {
       color: Colors.green,
       child: new DefaultTabController(
         length: widget.totalNumberOfMonths,
-        initialIndex: widget.totalNumberOfMonths ~/ 2,
+        initialIndex: initialIndex,
         child: new TabBarView(
           children: generateTabs(),
         ),
