@@ -13,3 +13,13 @@ packages
 
 # Include when developing application packages.
 pubspec.lock
+
+# IDE
+.idea
+.vscode
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
