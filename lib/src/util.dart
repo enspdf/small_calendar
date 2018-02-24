@@ -109,11 +109,15 @@ DateTime _lowerToFirstWeekday(DateTime day, int firstWeekday) {
   return dayUtc;
 }
 
-int getDifferenceOfMonths(Month month1, Month month2) {
+int getDifferenceOfMonths(Month month1, Month month2, int maxDifference) {
   int r = 0;
   while (month1 != month2) {
     month1 = month1.add(1);
     r++;
+
+    if (r >= maxDifference) {
+      return maxDifference;
+    }
   }
 
   return r;

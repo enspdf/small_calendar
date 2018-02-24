@@ -12,7 +12,7 @@ class Day extends StatefulWidget {
   final DateTime date;
   final bool isExtendedDay;
   final SmallCalendarController controller;
-  final DateTimeCallback onDayPressed;
+  final DateCallback onDayPressed;
 
   Day({
     @required this.date,
@@ -131,16 +131,19 @@ class _DayState extends State<Day> {
 
   @override
   Widget build(BuildContext context) {
+    VoidCallback onTap;
+    if (widget.onDayPressed != null) {
+      onTap = () {
+        widget.onDayPressed(widget.date);
+      };
+    }
+
     return new Container(
       padding: SmallCalendarStyle.of(context).dayStyleData.padding,
       child: new Material(
         color: Colors.transparent,
         child: new InkWell(
-          onTap: (widget.onDayPressed != null)
-              ? () {
-                  widget.onDayPressed(widget.date);
-                }
-              : null,
+          onTap: onTap,
           child: new Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -245,12 +248,6 @@ class _DayState extends State<Day> {
           shape: BoxShape.circle,
         ),
       ),
-    );
-  }
-
-  Widget createTickSeparator() {
-    return new Container(
-      width: SmallCalendarStyle.of(context).dayStyleData.tickSeparation,
     );
   }
 }

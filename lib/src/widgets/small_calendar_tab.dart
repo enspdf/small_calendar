@@ -18,7 +18,7 @@ class SmallCalendarTab extends StatelessWidget {
   final SmallCalendarController controller;
 
   final double weekdayIndicationHeight;
-  final DateTimeCallback onDayPressed;
+  final DateCallback onDayPressed;
 
   SmallCalendarTab({
     @required this.showWeekdayIndication,

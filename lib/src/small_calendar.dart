@@ -1,5 +1,3 @@
-library small_calendar;
-
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -12,7 +10,9 @@ import 'package:small_calendar/src/small_calendar_controller.dart';
 import 'package:small_calendar/src/util.dart';
 
 class SmallCalendar extends StatefulWidget {
+  /// Number of months that will be displayed
   final int totalNumberOfMonths;
+
   final bool showWeekdayIndication;
 
   final DateTime initialDate;
@@ -27,7 +27,7 @@ class SmallCalendar extends StatefulWidget {
 
   final SmallCalendarController controller;
 
-  final DateTimeCallback onDayPressed;
+  final DateCallback onDayPressed;
 
   final Key key;
 
@@ -52,19 +52,20 @@ class SmallCalendar extends StatefulWidget {
             (firstWeekday <= DateTime.SUNDAY)),
         assert(dayNamesMap != null),
         assert(weekdayIndicationHeight != null),
-        assert(controller != null);
+        assert(controller != null),
+        assert(key != null);
 
   factory SmallCalendar({
     int totalNumberOfMonths = 120,
     bool showWeekdayIndication = true,
     DateTime initialDate,
-    int firstWeekday = DateTime.MONDAY,
+    int firstWeekday = DateTime.monday,
     DayStyleData dayStyle,
     WeekdayIndicationStyleData weekdayIndicationStyle,
     Map<int, String> dayNamesMap = oneLetterEnglishDayNames,
     double weekdayIndicationHeight = 25.0,
     SmallCalendarController controller,
-    DateTimeCallback onDayPressed,
+    DateCallback onDayPressed,
   }) {
     initialDate = initialDate ?? new DateTime.now();
 
@@ -99,6 +100,13 @@ class _SmallCalendarState extends State<SmallCalendar>
   void initState() {
     super.initState();
 
+    int initialIndex = widget.totalNumberOfMonths ~/ 2;
+
+    Month initialMonth = new Month(
+      widget.initialDate.year,
+      widget.initialDate.month,
+    );
+
     firstMonth = generateMonthXMonthsAgo(
       initialMonth,
       widget.totalNumberOfMonths - initialIndex,
@@ -117,7 +125,7 @@ class _SmallCalendarState extends State<SmallCalendar>
 
   @override
   void dispose() {
-    registerGoToListener();
+    removeGoToListener();
 
     super.dispose();
   }
@@ -147,11 +155,31 @@ class _SmallCalendarState extends State<SmallCalendar>
   }
 
   void registerGoToListener() {
-    widget.controller.addGoToListener(changeTabTo);
+    widget.controller.addGoToListener(changeToTabThatDisplaysDate);
   }
 
   void removeGoToListener() {
-    widget.controller.removeGoToListener();
+    widget.controller.removeGoToListener(changeToTabThatDisplaysDate);
+  }
+
+  void changeToTabThatDisplaysDate(DateTime date) {
+    int desiredTabNumber;
+
+    if (date.isBefore(new DateTime(firstMonth.year, firstMonth.month))) {
+      desiredTabNumber = 0;
+    } else {
+      desiredTabNumber = getDifferenceOfMonths(
+        firstMonth,
+        new Month.fromDateTime(date),
+        widget.totalNumberOfMonths,
+      );
+
+      if (desiredTabNumber >= tabController.length) {
+        desiredTabNumber = tabController.length - 1;
+      }
+    }
+
+    tabController.animateTo(desiredTabNumber);
   }
 
   List<Widget> generateTabs() {
@@ -169,22 +197,6 @@ class _SmallCalendarState extends State<SmallCalendar>
         )
         .toList();
   }
-
-  void changeTabTo(DateTime date) {
-    int desiredTabNumber = getDifferenceOfMonths(
-      firstMonth,
-      new Month.fromDateTime(date),
-    );
-
-    tabController.animateTo(desiredTabNumber);
-  }
-
-  int get initialIndex => widget.totalNumberOfMonths ~/ 2;
-
-  Month get initialMonth => new Month(
-        widget.initialDate.year,
-        widget.initialDate.month,
-      );
 
   @override
   Widget build(BuildContext context) {

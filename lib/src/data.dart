@@ -6,7 +6,10 @@ class Month {
   final int year;
   final int month;
 
-  Month(this.year, this.month);
+  Month(
+    this.year,
+    this.month,
+  );
 
   factory Month.fromDateTime(DateTime dateTime) {
     return new Month(
@@ -20,6 +23,8 @@ class Month {
   }
 
   Month add(int numOfMonths) {
+    assert(numOfMonths >= 0);
+
     int newYear = year;
     int newMonth = month;
 
@@ -58,11 +63,11 @@ class Month {
 }
 
 const Map<int, String> oneLetterEnglishDayNames = const <int, String>{
-  DateTime.MONDAY: "M",
-  DateTime.TUESDAY: "T",
-  DateTime.WEDNESDAY: "W",
-  DateTime.THURSDAY: "T",
-  DateTime.FRIDAY: "F",
-  DateTime.SATURDAY: "S",
-  DateTime.SUNDAY: "S",
+  DateTime.monday: "M",
+  DateTime.tuesday: "T",
+  DateTime.wednesday: "W",
+  DateTime.thursday: "T",
+  DateTime.friday: "F",
+  DateTime.saturday: "S",
+  DateTime.sunday: "S",
 };

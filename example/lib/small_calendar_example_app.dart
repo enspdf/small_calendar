@@ -11,8 +11,8 @@ class SmallCalendarExampleApp extends StatefulWidget {
 
 class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
   bool showWeekdayIndication = true;
-  CustomSmallCalendarController smallCalendarController =
-      new CustomSmallCalendarController();
+  SmallCalendarController smallCalendarController =
+      createSmallCalendarController();
 
   @override
   void initState() {
@@ -23,8 +23,13 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
     return new SmallCalendar(
       showWeekdayIndication: showWeekdayIndication,
       controller: smallCalendarController,
+      firstWeekday: DateTime.monday,
       weekdayIndicationStyle: new WeekdayIndicationStyleData(
         backgroundColor: Theme.of(context).primaryColor,
+        textStyle: new TextStyle(color: Colors.grey[300])
+      ),
+      dayStyle: new DayStyleData(
+        tick3Color: Colors.orange,
       ),
       onDayPressed: (DateTime date) {
         print("$date");
@@ -88,7 +93,7 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
                     ),
                     new Divider(),
                     new Text(
-                      """For example porpuses:
+                      """For example purpuses:
                     * every first day of month has tick1
                     * every second day of month has tick2
                     * every third day of month has tick3

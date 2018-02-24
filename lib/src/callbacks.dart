@@ -1,1 +1,2 @@
-typedef DateTimeCallback(DateTime day);
+typedef DateCallback(DateTime date);
+
