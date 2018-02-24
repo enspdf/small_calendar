@@ -1,1 +1,1 @@
-typedef OnDayPressed(DateTime day);
+typedef DateTimeCallback(DateTime day);

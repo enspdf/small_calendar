@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../small_calendar_controller.dart';
-import '../callbacks.dart';
+import 'package:small_calendar/src/widgets/all.dart';
 
-import 'small_calendar_style.dart';
+import 'package:small_calendar/src/callbacks.dart';
+import 'package:small_calendar/src/small_calendar_controller.dart';
 
 class Day extends StatefulWidget {
   final DateTime date;
   final bool isExtendedDay;
   final SmallCalendarController controller;
-  final OnDayPressed onDayPressed;
+  final DateTimeCallback onDayPressed;
 
   Day({
     @required this.date,
@@ -26,6 +26,8 @@ class Day extends StatefulWidget {
 }
 
 class _DayState extends State<Day> {
+  bool isActive;
+
   bool isToday;
   bool isSelected;
   bool hasTick1;
@@ -36,9 +38,18 @@ class _DayState extends State<Day> {
   void initState() {
     super.initState();
 
+    isActive = true;
+
     initDefaultValues();
 
     initAsync();
+  }
+
+  @override
+  void dispose() {
+    isActive = false;
+
+    super.dispose();
   }
 
   void initDefaultValues() {
@@ -52,6 +63,8 @@ class _DayState extends State<Day> {
   Future initAsync() async {
     // isToday
     widget.controller.isToday(widget.date).then((value) {
+      if (!isActive) return;
+
       setState(() {
         isToday = value;
       });
@@ -59,6 +72,8 @@ class _DayState extends State<Day> {
 
     // isSelected
     widget.controller.isSelected(widget.date).then((value) {
+      if (!isActive) return;
+
       setState(() {
         isSelected = value;
       });
@@ -66,6 +81,8 @@ class _DayState extends State<Day> {
 
     // hasTick1
     widget.controller.hasTick1(widget.date).then((value) {
+      if (!isActive) return;
+
       setState(() {
         hasTick1 = value;
       });
@@ -73,6 +90,8 @@ class _DayState extends State<Day> {
 
     // hasTick2
     widget.controller.hasTick2(widget.date).then((value) {
+      if (!isActive) return;
+
       setState(() {
         hasTick2 = value;
       });
@@ -80,6 +99,8 @@ class _DayState extends State<Day> {
 
     // hasTick3
     widget.controller.hasTick3(widget.date).then((value) {
+      if (!isActive) return;
+
       setState(() {
         hasTick3 = value;
       });
@@ -167,7 +188,10 @@ class _DayState extends State<Day> {
           child: new Text(
             "${widget.date.day}",
             style: widget.isExtendedDay
-                ? SmallCalendarStyle.of(context).dayStyleData.extendedDayTextStyle
+                ? SmallCalendarStyle
+                    .of(context)
+                    .dayStyleData
+                    .extendedDayTextStyle
                 : SmallCalendarStyle.of(context).dayStyleData.dayTextStyle,
           ),
         ),

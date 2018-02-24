@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../style_data/all.dart';
+import 'package:small_calendar/src/style_data/all.dart';
 
 class SmallCalendarStyle extends InheritedWidget {
   final DayStyleData dayStyleData;

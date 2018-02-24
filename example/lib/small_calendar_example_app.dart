@@ -11,7 +11,8 @@ class SmallCalendarExampleApp extends StatefulWidget {
 
 class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
   bool showWeekdayIndication = true;
-  DateTime initialDate = new DateTime.now().add(new Duration(days: 30));
+  CustomSmallCalendarController smallCalendarController =
+      new CustomSmallCalendarController();
 
   @override
   void initState() {
@@ -21,8 +22,7 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
   Widget createSmallCalendar() {
     return new SmallCalendar(
       showWeekdayIndication: showWeekdayIndication,
-      initialDate: initialDate,
-      controller: new CustomSmallCalendarController(),
+      controller: smallCalendarController,
       weekdayIndicationStyle: new WeekdayIndicationStyleData(
         backgroundColor: Theme.of(context).primaryColor,
       ),
@@ -82,18 +82,10 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
                       child: new Text("Go to today"),
                       onPressed: () {
                         setState(() {
-                          initialDate = new DateTime.now();
+                          smallCalendarController.goToToday();
                         });
                       },
                     ),
-                    new RaisedButton(onPressed: () {
-                      setState(() {
-                        DateTime now = new DateTime.now();
-                        now = now.add(new Duration(days: 1));
-
-                        initialDate = now;
-                      });
-                    }),
                     new Divider(),
                     new Text(
                       """For example porpuses:

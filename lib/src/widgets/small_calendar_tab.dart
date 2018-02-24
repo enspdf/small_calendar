@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../generator.dart';
-import '../data.dart';
-import '../small_calendar_controller.dart';
+import 'package:small_calendar/src/widgets/all.dart';
 
-import '../callbacks.dart';
-import 'weekday_indicator.dart';
-import 'small_calendar_style.dart';
-import 'day.dart';
+import 'package:small_calendar/src/callbacks.dart';
+import 'package:small_calendar/src/data.dart';
+import 'package:small_calendar/src/small_calendar_controller.dart';
+import 'package:small_calendar/src/util.dart';
 
 class SmallCalendarTab extends StatelessWidget {
   final bool showWeekdayIndication;
@@ -20,7 +18,7 @@ class SmallCalendarTab extends StatelessWidget {
   final SmallCalendarController controller;
 
   final double weekdayIndicationHeight;
-  final OnDayPressed onDayPressed;
+  final DateTimeCallback onDayPressed;
 
   SmallCalendarTab({
     @required this.showWeekdayIndication,

@@ -73,7 +73,10 @@ List<DateTime> generateExtendedDaysOfMonth(Month month, int firstWeekday) {
 
   // adds days before the start of the month
   currentDay = _lowerToFirstWeekday(
-    new DateTime.utc(month.year, month.month,),
+    new DateTime.utc(
+      month.year,
+      month.month,
+    ),
     firstWeekday,
   );
   while (currentDay.month != month.month) {
@@ -103,5 +106,15 @@ DateTime _lowerToFirstWeekday(DateTime day, int firstWeekday) {
     dayUtc = dayUtc.add(new Duration(days: -1));
   }
 
-  return dayUtc ;
+  return dayUtc;
+}
+
+int getDifferenceOfMonths(Month month1, Month month2) {
+  int r = 0;
+  while (month1 != month2) {
+    month1 = month1.add(1);
+    r++;
+  }
+
+  return r;
 }

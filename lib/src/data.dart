@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:quiver/core.dart';
 
 @immutable
 class Month {
@@ -16,6 +17,43 @@ class Month {
 
   factory Month.now() {
     return new Month.fromDateTime(new DateTime.now());
+  }
+
+  Month add(int numOfMonths) {
+    int newYear = year;
+    int newMonth = month;
+
+    for (int i = 0; i < numOfMonths; i++) {
+      newMonth++;
+      if (newMonth == 13) {
+        newYear++;
+        newMonth = 1;
+      }
+    }
+
+    return new Month(newYear, newMonth);
+  }
+
+  @override
+  int get hashCode {
+    return hashObjects([
+      year,
+      month,
+    ]);
+  }
+
+  @override
+  bool operator ==(other) {
+    if (other is Month) {
+      return other.year == year && other.month == month;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  String toString() {
+    return "$year.$month";
   }
 }
 

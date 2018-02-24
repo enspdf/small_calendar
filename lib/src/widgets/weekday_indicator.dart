@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import 'small_calendar_style.dart';
+import 'package:small_calendar/src/widgets/all.dart';
 
 class WeekdayIndicator extends StatelessWidget {
   final String text;

@@ -38,4 +38,6 @@ class CustomSmallCalendarController extends SmallCalendarController {
 
     return false;
   }
+
+
 }
