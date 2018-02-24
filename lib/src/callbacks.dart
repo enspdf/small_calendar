@@ -1,0 +1,1 @@
+typedef OnDayPressed(DateTime day);

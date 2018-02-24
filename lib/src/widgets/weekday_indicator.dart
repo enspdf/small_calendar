@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:meta/meta.dart';
+
+import 'small_calendar_style.dart';
 
 class WeekdayIndicator extends StatelessWidget {
   final String text;
@@ -12,9 +13,14 @@ class WeekdayIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Container(
-      color: Colors.red,
       child: new Center(
-        child: new Text(text),
+        child: new Text(
+          text,
+          style: SmallCalendarStyle
+              .of(context)
+              .weekdayIndicationStyleData
+              .textStyle,
+        ),
       ),
     );
   }
