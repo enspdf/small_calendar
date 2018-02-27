@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:small_calendar/src/callbacks.dart';
 
@@ -22,6 +23,8 @@ class SmallCalendarController {
 
   Set<DateCallback> _goToListeners = new Set<DateCallback>();
 
+  Set<VoidCallback> _dayRefreshListeners = new Set<VoidCallback>();
+
   SmallCalendarController({
     this.isTodayCallback,
     this.isSelectedCallback,
@@ -44,6 +47,22 @@ class SmallCalendarController {
     for (DateCallback listener in _goToListeners) {
       if (listener != null) {
         listener(dateToGoTo);
+      }
+    }
+  }
+
+  void addDayRefreshListener(VoidCallback listener) {
+    _dayRefreshListeners.add(listener);
+  }
+
+  void removeDayRefreshListener(VoidCallback listener) {
+    _dayRefreshListeners.remove(listener);
+  }
+
+  void _notifyDayRefreshListeners() {
+    for (VoidCallback listener in _dayRefreshListeners) {
+      if (listener != null) {
+        listener();
       }
     }
   }
@@ -114,5 +133,12 @@ class SmallCalendarController {
   /// that can be displayed.
   void goToToday() {
     goTo(new DateTime.now());
+  }
+
+  // refresh -------------------------------------------------------------------
+
+  /// Notifies all widgets displaying a day of month to refresh their data.
+  void refreshDayInformation() {
+    _notifyDayRefreshListeners();
   }
 }

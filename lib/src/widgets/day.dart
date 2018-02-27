@@ -42,12 +42,15 @@ class _DayState extends State<Day> {
 
     initDefaultValues();
 
-    initAsync();
+    gatherIsHasInformation();
+    registerAsOnDayRefreshListener();
   }
 
   @override
   void dispose() {
     isActive = false;
+
+    widget.controller.removeDayRefreshListener(onDayRefresh);
 
     super.dispose();
   }
@@ -60,7 +63,7 @@ class _DayState extends State<Day> {
     hasTick3 = false;
   }
 
-  Future initAsync() async {
+  Future gatherIsHasInformation() async {
     // isToday
     widget.controller.isToday(widget.date).then((value) {
       if (!isActive) return;
@@ -125,9 +128,27 @@ class _DayState extends State<Day> {
         initDefaultValues();
       });
 
-      initAsync();
+      gatherIsHasInformation();
+      oldWidget.controller.removeDayRefreshListener(onDayRefresh);
+      registerAsOnDayRefreshListener();
     }
   }
+
+  // onDayRefresh --------------------------------------------------------------
+
+  void onDayRefresh() {
+    setState((){
+      initDefaultValues();
+    });
+
+    gatherIsHasInformation();
+  }
+
+  void registerAsOnDayRefreshListener() {
+    widget.controller.addDayRefreshListener(onDayRefresh);
+  }
+
+  // gui -----------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
