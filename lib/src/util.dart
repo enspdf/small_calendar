@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'data.dart';
 
 List<int> generateWeekdays(int firstWeekday) {
