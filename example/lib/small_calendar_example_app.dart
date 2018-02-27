@@ -11,6 +11,7 @@ class SmallCalendarExampleApp extends StatefulWidget {
 
 class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
   bool showWeekdayIndication = true;
+  bool showTicks = true;
   SmallCalendarController smallCalendarController =
       createSmallCalendarController();
 
@@ -29,6 +30,7 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
         textStyle: new TextStyle(color: Colors.grey[300])
       ),
       dayStyle: new DayStyleData(
+        showTicks: showTicks,
         tick3Color: Colors.orange,
       ),
       onDayPressed: (DateTime date) {
@@ -74,13 +76,25 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
                       children: <Widget>[
                         new Checkbox(
                           value: showWeekdayIndication,
-                          onChanged: (value) {
+                          onChanged: (newValue) {
                             setState(() {
-                              showWeekdayIndication = value;
+                              showWeekdayIndication = newValue;
                             });
                           },
                         ),
                         new Text("Show Weekday Indication"),
+                      ],
+                    ),
+                    // show ticks
+                    new Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Checkbox(value: showTicks, onChanged: (newValue){
+                          setState((){
+                            showTicks = newValue;
+                          });
+                        }),
+                        new Text("Show Ticks"),
                       ],
                     ),
                     new RaisedButton(

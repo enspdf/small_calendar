@@ -137,7 +137,7 @@ class _DayState extends State<Day> {
   // onDayRefresh --------------------------------------------------------------
 
   void onDayRefresh() {
-    setState((){
+    setState(() {
       initDefaultValues();
     });
 
@@ -159,6 +159,30 @@ class _DayState extends State<Day> {
       };
     }
 
+    List<Widget> mainColumnItems = <Widget>[
+      // text
+      new Expanded(
+        flex: 3,
+        child: createDayNum(),
+      ),
+    ];
+    if (SmallCalendarStyle.of(context).dayStyleData.showTicks) {
+      mainColumnItems.add(
+        // separation
+        new Container(
+          height:
+              SmallCalendarStyle.of(context).dayStyleData.textTickSeparation,
+        ),
+      );
+      mainColumnItems.add(
+        // ticks
+        new Expanded(
+          flex: 1,
+          child: createTicks(),
+        ),
+      );
+    }
+
     return new Container(
       padding: SmallCalendarStyle.of(context).dayStyleData.padding,
       child: new Material(
@@ -168,25 +192,7 @@ class _DayState extends State<Day> {
           child: new Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              // text
-              new Expanded(
-                flex: 3,
-                child: createDayNum(),
-              ),
-              // separation
-              new Container(
-                height: SmallCalendarStyle
-                    .of(context)
-                    .dayStyleData
-                    .textTickSeparation,
-              ),
-              // ticks
-              new Expanded(
-                flex: 1,
-                child: createTicks(),
-              ),
-            ],
+            children: mainColumnItems,
           ),
         ),
       ),

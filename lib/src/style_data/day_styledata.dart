@@ -9,6 +9,8 @@ class DayStyleData {
   final Color todayColor;
   final Color selectedColor;
 
+  final bool showTicks;
+
   final Color tick1Color;
   final Color tick2Color;
   final Color tick3Color;
@@ -23,6 +25,7 @@ class DayStyleData {
     @required this.extendedDayTextStyle,
     @required this.todayColor,
     @required this.selectedColor,
+    @required this.showTicks,
     @required this.tick1Color,
     @required this.tick2Color,
     @required this.tick3Color,
@@ -34,6 +37,7 @@ class DayStyleData {
         assert(extendedDayTextStyle != null),
         assert(todayColor != null),
         assert(selectedColor != null),
+        assert(showTicks != null),
         assert(tick1Color != null),
         assert(tick2Color != null),
         assert(tick3Color != null),
@@ -46,6 +50,7 @@ class DayStyleData {
     TextStyle extendedDayTextStyle,
     Color todayColor,
     Color selectedColor,
+    bool showTicks = true,
     Color tick1Color,
     Color tick2Color,
     Color tick3Color,
@@ -60,6 +65,7 @@ class DayStyleData {
           extendedDayTextStyle ?? new TextStyle(fontWeight: FontWeight.w300),
       todayColor: todayColor ?? Colors.blue[200],
       selectedColor: selectedColor ?? Colors.purple[200],
+      showTicks: showTicks,
       tick1Color: tick1Color ?? Colors.red,
       tick2Color: tick2Color ?? Colors.green,
       tick3Color: tick3Color ?? Colors.blue,
@@ -74,6 +80,7 @@ class DayStyleData {
     TextStyle extendedDayTextStyle,
     Color todayColor,
     Color selectedColor,
+    bool showTicks,
     Color tick1Color,
     Color tick2Color,
     Color tick3Color,
@@ -86,6 +93,7 @@ class DayStyleData {
       extendedDayTextStyle: extendedDayTextStyle ?? this.extendedDayTextStyle,
       todayColor: todayColor ?? this.todayColor,
       selectedColor: selectedColor ?? this.selectedColor,
+      showTicks: showTicks ?? this.showTicks,
       tick1Color: tick1Color ?? this.tick1Color,
       tick2Color: tick2Color ?? this.tick2Color,
       tick3Color: tick3Color ?? this.tick3Color,
