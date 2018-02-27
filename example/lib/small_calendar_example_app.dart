@@ -57,7 +57,7 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
                   child: new Container(
                     width: 250.0,
                     height: 250.0,
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                     // Small Calendar ------------------------------------------
                     child: createSmallCalendar(),
                     // ---------------------------------------------------------
