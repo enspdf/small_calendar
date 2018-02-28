@@ -6,19 +6,19 @@ import 'package:small_calendar/src/callbacks.dart';
 typedef Future<bool> IsHasCallback(DateTime date);
 
 class SmallCalendarController {
-  /// Future that returns true if specific date is today
+  /// Future that returns true if specific date is today.
   final IsHasCallback isTodayCallback;
 
-  /// Future that returns true if specific date is selected
+  /// Future that returns true if specific date is selected.
   final IsHasCallback isSelectedCallback;
 
-  /// Future that returns true if there is a tick associated with specific date
+  /// Future that returns true if there is a tick1 associated with specific date.
   final IsHasCallback hasTick1Callback;
 
-  /// Future that returns true if there is a tick associated with specific date
+  /// Future that returns true if there is a tick2 associated with specific date.
   final IsHasCallback hasTick2Callback;
 
-  /// Future that returns true if there is a tick associated with specific date
+  /// Future that returns true if there is a tick3 associated with specific date.
   final IsHasCallback hasTick3Callback;
 
   Set<DateCallback> _goToListeners = new Set<DateCallback>();
@@ -121,23 +121,21 @@ class SmallCalendarController {
 
   /// [SmallCalendar] displays month that shows [date].
   ///
-  /// If month with specific [date] cannot be displayed, it shows the nearest month
-  /// that can be displayed.
+  /// If month with specific [date] cannot be displayed, it shows the nearest month.
   void goTo(DateTime date) {
     _notifyGoToListener(date);
   }
 
   /// [SmallCalendar] displays month that shows today's date.
   ///
-  /// If month with specific today's date cannot be displayed, it shows the nearest month
-  /// that can be displayed.
+  /// If month with today's date cannot be displayed, it shows the nearest month.
   void goToToday() {
     goTo(new DateTime.now());
   }
 
   // refresh -------------------------------------------------------------------
 
-  /// Notifies all widgets displaying a day of month to refresh their data.
+  /// Notifies all day widgets to refresh their data.
   void refreshDayInformation() {
     _notifyDayRefreshListeners();
   }

@@ -10,23 +10,36 @@ import 'package:small_calendar/src/small_calendar_controller.dart';
 import 'package:small_calendar/src/util.dart';
 
 class SmallCalendar extends StatefulWidget {
-  /// Number of months that will be displayed
+  /// Total number of months, that the widget will allow to display.
+  ///
+  /// Half of months will be before and half will be after [initialDate].
   final int totalNumberOfMonths;
 
+  /// If true weekday indication will be shown.
   final bool showWeekdayIndication;
 
+  /// Initial date that is displayed when the widget is created.
   final DateTime initialDate;
+
+  /// Integer representing firstWeekday.
   final int firstWeekday;
 
+  /// Style of day widgets.
   final DayStyleData dayStyle;
+
+  /// Style of weekday indication.
   final WeekdayIndicationStyleData weekdayIndicationStyle;
 
+  /// Map of <int>weekday and <String>weekdayName value pairs.
   final Map<int, String> dayNamesMap;
 
+  /// Height of weekday indication area
   final double weekdayIndicationHeight;
 
+  /// Controller
   final SmallCalendarController controller;
 
+  /// Callback that calls when user selects on a day.
   final DateCallback onDayPressed;
 
   final Key key;

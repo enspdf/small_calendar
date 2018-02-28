@@ -1,9 +1,19 @@
 # small_calendar
 
-small_calendar widget
+small_calendar widget.
 
-## Getting Started
+## Usage
 
-For help getting started with Flutter, view our online [documentation](http://flutter.io/).
+### Add Dependency
 
-For help on editing package code, view the [documentation](https://flutter.io/developing-packages/).
+```yaml
+dependencies:
+    small_calendar: "^0.1.0"
+```
+
+### Import it
+
+```dart
+import 'package:small_calendar/small_calendar.dart';
+```
+

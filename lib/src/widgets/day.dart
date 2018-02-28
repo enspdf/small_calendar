@@ -184,7 +184,7 @@ class _DayState extends State<Day> {
     }
 
     return new Container(
-      padding: SmallCalendarStyle.of(context).dayStyleData.padding,
+      margin: SmallCalendarStyle.of(context).dayStyleData.margin,
       child: new Material(
         color: Colors.transparent,
         child: new InkWell(

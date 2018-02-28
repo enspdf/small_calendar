@@ -3,22 +3,36 @@ import 'package:meta/meta.dart';
 
 @immutable
 class DayStyleData {
+  /// [TextStyle] of widget representing the day of month number.
   final TextStyle dayTextStyle;
+
+  /// [TextStyle] of widget representing the day of month number, if the day is
+  /// of previous or next month.
   final TextStyle extendedDayTextStyle;
 
+  /// [Color] of indicator that specific day is today.
   final Color todayColor;
+
+  /// [Color] of indicator that specific day is selected.
   final Color selectedColor;
 
+  /// If true ticks will be shown.
   final bool showTicks;
 
+  /// [Color] of tick1.
   final Color tick1Color;
+
+  /// [Color] of tick2.
   final Color tick2Color;
+
+  /// [Color] of tick3.
   final Color tick3Color;
 
-  final EdgeInsetsGeometry padding;
+  /// Margin around a widget representing a day.
+  final EdgeInsetsGeometry margin;
 
+  /// Height of separation between day of month text and ticks.
   final double textTickSeparation;
-  final double tickSeparation;
 
   DayStyleData.raw({
     @required this.dayTextStyle,
@@ -29,9 +43,8 @@ class DayStyleData {
     @required this.tick1Color,
     @required this.tick2Color,
     @required this.tick3Color,
-    @required this.padding,
+    @required this.margin,
     @required this.textTickSeparation,
-    @required this.tickSeparation,
   })
       : assert(dayTextStyle != null),
         assert(extendedDayTextStyle != null),
@@ -41,9 +54,8 @@ class DayStyleData {
         assert(tick1Color != null),
         assert(tick2Color != null),
         assert(tick3Color != null),
-        assert(padding != null),
-        assert(textTickSeparation != null),
-        assert(tickSeparation != null);
+        assert(margin != null),
+        assert(textTickSeparation != null);
 
   factory DayStyleData({
     TextStyle dayTextStyle,
@@ -54,10 +66,9 @@ class DayStyleData {
     Color tick1Color,
     Color tick2Color,
     Color tick3Color,
-    EdgeInsetsGeometry padding =
+    EdgeInsetsGeometry margin =
         const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2.0),
     double textTickSeparation = 2.0,
-    double tickSeparation = 0.0,
   }) {
     return new DayStyleData.raw(
       dayTextStyle: dayTextStyle ?? new TextStyle(),
@@ -69,9 +80,8 @@ class DayStyleData {
       tick1Color: tick1Color ?? Colors.red,
       tick2Color: tick2Color ?? Colors.green,
       tick3Color: tick3Color ?? Colors.blue,
-      padding: padding,
+      margin: margin,
       textTickSeparation: textTickSeparation,
-      tickSeparation: tickSeparation,
     );
   }
 
@@ -84,9 +94,8 @@ class DayStyleData {
     Color tick1Color,
     Color tick2Color,
     Color tick3Color,
-    EdgeInsetsGeometry padding,
+    EdgeInsetsGeometry margin,
     double textTickSeparation,
-    double tickSeparation,
   }) {
     return new DayStyleData.raw(
       dayTextStyle: dayTextStyle ?? this.dayTextStyle,
@@ -97,9 +106,8 @@ class DayStyleData {
       tick1Color: tick1Color ?? this.tick1Color,
       tick2Color: tick2Color ?? this.tick2Color,
       tick3Color: tick3Color ?? this.tick3Color,
-      padding: padding ?? this.padding,
+      margin: margin ?? this.margin,
       textTickSeparation: textTickSeparation ?? this.textTickSeparation,
-      tickSeparation: tickSeparation ?? this.tickSeparation,
     );
   }
 }

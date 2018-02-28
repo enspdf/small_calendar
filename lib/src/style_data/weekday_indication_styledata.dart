@@ -3,7 +3,10 @@ import 'package:meta/meta.dart';
 
 @immutable
 class WeekdayIndicationStyleData {
+  /// [TextStyle] of widget that is indicating a weekday.
   final TextStyle textStyle;
+
+  /// Background [Color] of area that is indicating weekdays.
   final Color backgroundColor;
 
   WeekdayIndicationStyleData.raw({
