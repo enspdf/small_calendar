@@ -3,17 +3,16 @@ import 'package:meta/meta.dart';
 
 @immutable
 class DayStyleData {
-  /// [TextStyle] of widget representing the day of month number.
+  /// [TextStyle] of day widget.
   final TextStyle dayTextStyle;
 
-  /// [TextStyle] of widget representing the day of month number, if the day is
-  /// of previous or next month.
+  /// [TextStyle] of day widget, that is representing a day of previous or next month.
   final TextStyle extendedDayTextStyle;
 
-  /// [Color] of indicator that specific day is today.
+  /// [Color] of indication that specific day is today.
   final Color todayColor;
 
-  /// [Color] of indicator that specific day is selected.
+  /// [Color] of indication that specific day is selected.
   final Color selectedColor;
 
   /// If true ticks will be shown.
@@ -28,7 +27,7 @@ class DayStyleData {
   /// [Color] of tick3.
   final Color tick3Color;
 
-  /// Margin around a widget representing a day.
+  /// Margin of day widget.
   final EdgeInsetsGeometry margin;
 
   /// Height of separation between day of month text and ticks.

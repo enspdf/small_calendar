@@ -39,7 +39,7 @@ class SmallCalendar extends StatefulWidget {
   /// Controller
   final SmallCalendarController controller;
 
-  /// Callback that calls when user selects on a day.
+  /// Callback that fires when user selects on a day.
   final DateCallback onDayPressed;
 
   final Key key;
