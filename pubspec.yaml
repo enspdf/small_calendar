@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   quiver: "^0.28.0"
-  meta: "^1.1.2"
+  meta: "^1.1.1"
 
 dev_dependencies:
   test: ^0.12.0
