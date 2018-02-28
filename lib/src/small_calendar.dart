@@ -80,6 +80,16 @@ class SmallCalendar extends StatefulWidget {
     SmallCalendarController controller,
     DateCallback onDayPressed,
   }) {
+    // checks that dayNamesMap contains a keyValue pair for every weekday
+    if (showWeekdayIndication) {
+      for (int i = DateTime.monday; i <= DateTime.sunday; i++) {
+        if (!dayNamesMap.containsKey(i)) {
+          throw new ArgumentError(
+              "dayNamesMap shuld contain a key-value pair for every weekday");
+        }
+      }
+    }
+
     initialDate = initialDate ?? new DateTime.now();
 
     return new SmallCalendar._internal(
