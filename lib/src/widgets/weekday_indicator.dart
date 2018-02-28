@@ -14,12 +14,14 @@ class WeekdayIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Container(
       child: new Center(
-        child: new Text(
-          text,
-          style: SmallCalendarStyle
-              .of(context)
-              .weekdayIndicationStyleData
-              .textStyle,
+        child: new ClipRect(
+          child: new Text(
+            text,
+            style: SmallCalendarStyle
+                .of(context)
+                .weekdayIndicationStyleData
+                .textStyle,
+          ),
         ),
       ),
     );
