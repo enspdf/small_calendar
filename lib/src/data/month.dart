@@ -9,9 +9,14 @@ class Month {
   Month(
     this.year,
     this.month,
-  );
+  )
+      : assert(year != null),
+        assert(month != null),
+        assert(month >= 1 && month <= 12);
 
   factory Month.fromDateTime(DateTime dateTime) {
+    assert(dateTime != null);
+
     return new Month(
       dateTime.year,
       dateTime.month,
@@ -22,22 +27,26 @@ class Month {
     return new Month.fromDateTime(new DateTime.now());
   }
 
+  /// Returns a new [Month] with [numOfMonths] added to [this].
   Month add(int numOfMonths) {
-    assert(numOfMonths >= 0);
+    assert(numOfMonths != null);
 
-    int newYear = year;
-    int newMonth = month;
+    int yearChange = numOfMonths ~/ 12;
+    int monthChange = (numOfMonths.abs() % 12) * numOfMonths.sign;
 
-    for (int i = 0; i < numOfMonths; i++) {
-      newMonth++;
-      if (newMonth == 13) {
-        newYear++;
-        newMonth = 1;
-      }
-    }
+    int newYear = year + yearChange;
+    int newMonthBase0 = _monthBase0 + monthChange;
+    if (newMonthBase0 > 11) newYear++;
+    if (newMonthBase0 < 0) newYear--;
+    newMonthBase0 = newMonthBase0 % 12;
 
-    return new Month(newYear, newMonth);
+    return new Month(
+      newYear,
+      newMonthBase0 + 1,
+    );
   }
+
+  int get _monthBase0 => month - 1;
 
   @override
   int get hashCode {
@@ -61,13 +70,3 @@ class Month {
     return "$year.$month";
   }
 }
-
-const Map<int, String> oneLetterEnglishDayNames = const <int, String>{
-  DateTime.monday: "M",
-  DateTime.tuesday: "T",
-  DateTime.wednesday: "W",
-  DateTime.thursday: "T",
-  DateTime.friday: "F",
-  DateTime.saturday: "S",
-  DateTime.sunday: "S",
-};

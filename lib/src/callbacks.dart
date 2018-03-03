@@ -1,1 +1,3 @@
-typedef DateCallback(DateTime date);
+import 'data/all.dart';
+
+typedef DayCallback(Day date);

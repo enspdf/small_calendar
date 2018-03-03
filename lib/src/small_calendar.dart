@@ -10,11 +10,6 @@ import 'package:small_calendar/src/small_calendar_controller.dart';
 import 'package:small_calendar/src/util.dart';
 
 class SmallCalendar extends StatefulWidget {
-  /// Total number of months, that the widget will allow to display.
-  ///
-  /// Half of months will be before and half will be after [initialDate].
-  final int totalNumberOfMonths;
-
   /// If true weekday indication will be shown.
   final bool showWeekdayIndication;
 
@@ -45,7 +40,6 @@ class SmallCalendar extends StatefulWidget {
   final Key key;
 
   SmallCalendar._internal({
-    @required this.totalNumberOfMonths,
     @required this.showWeekdayIndication,
     @required this.initialDate,
     @required this.firstWeekday,
@@ -57,8 +51,7 @@ class SmallCalendar extends StatefulWidget {
     @required this.onDayPressed,
     @required this.key,
   })
-      : assert(totalNumberOfMonths != null),
-        assert(showWeekdayIndication != null),
+      : assert(showWeekdayIndication != null),
         assert(initialDate != null),
         assert(firstWeekday != null),
         assert((firstWeekday >= DateTime.MONDAY) &&
@@ -69,7 +62,6 @@ class SmallCalendar extends StatefulWidget {
         assert(key != null);
 
   factory SmallCalendar({
-    int totalNumberOfMonths = 120,
     bool showWeekdayIndication = true,
     DateTime initialDate,
     int firstWeekday = DateTime.monday,
@@ -93,7 +85,6 @@ class SmallCalendar extends StatefulWidget {
     initialDate = initialDate ?? new DateTime.now();
 
     return new SmallCalendar._internal(
-      totalNumberOfMonths: totalNumberOfMonths,
       showWeekdayIndication: showWeekdayIndication,
       initialDate: initialDate,
       firstWeekday: firstWeekday,
@@ -103,9 +94,8 @@ class SmallCalendar extends StatefulWidget {
       weekdayIndicationHeight: weekdayIndicationHeight,
       controller: controller ?? new SmallCalendarController(),
       onDayPressed: onDayPressed,
-      key:
-          new Key("${initialDate.year}.${initialDate.month}.${initialDate.day};"
-              "totalNumOfMonths:$totalNumberOfMonths"),
+      key: new Key(
+          "${initialDate.year}.${initialDate.month}.${initialDate.day};"),
     );
   }
 
