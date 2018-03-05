@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import 'package:small_calendar/src/style_data/all.dart';
-import 'package:small_calendar/src/widgets/all.dart';
-
-import 'package:small_calendar/src/callbacks.dart';
-import 'package:small_calendar/src/data.dart';
-import 'package:small_calendar/src/small_calendar_controller.dart';
-import 'package:small_calendar/src/util.dart';
+import 'data/all.dart';
+import 'style_data/all.dart';
+import 'widgets/all.dart';
+import 'small_calendar_controller.dart';
+import 'callbacks.dart';
+import 'generator.dart';
 
 class SmallCalendar extends StatefulWidget {
-  /// Total number of months, that the widget will allow to display.
-  ///
-  /// Half of months will be before and half will be after [initialDate].
-  final int totalNumberOfMonths;
-
-  /// If true weekday indication will be shown.
-  final bool showWeekdayIndication;
-
   /// Initial date that is displayed when the widget is created.
   final DateTime initialDate;
 
@@ -27,65 +18,65 @@ class SmallCalendar extends StatefulWidget {
   /// Style of day widgets.
   final DayStyleData dayStyle;
 
+  /// If true weekday indication will be shown.
+  final bool showWeekdayIndication;
+
+  /// Height of weekday indication area
+  final double weekdayIndicationHeight;
+
   /// Style of weekday indication.
   final WeekdayIndicationStyleData weekdayIndicationStyle;
 
   /// Map of <int>weekday and <String>weekdayName value pairs.
   final Map<int, String> dayNamesMap;
 
-  /// Height of weekday indication area
-  final double weekdayIndicationHeight;
-
   /// Controller
   final SmallCalendarController controller;
 
   /// Callback that fires when user selects on a day.
-  final DateCallback onDayPressed;
+  final DateTimeCallback onDayPressed;
 
-  final Key key;
+  final YearMonthCallback onDisplayedMonthChanged;
 
-  SmallCalendar._internal({
-    @required this.totalNumberOfMonths,
-    @required this.showWeekdayIndication,
-    @required this.initialDate,
-    @required this.firstWeekday,
-    this.dayStyle,
-    this.weekdayIndicationStyle,
-    @required this.dayNamesMap,
-    @required this.weekdayIndicationHeight,
-    @required this.controller,
-    @required this.onDayPressed,
-    @required this.key,
-  })
-      : assert(totalNumberOfMonths != null),
-        assert(showWeekdayIndication != null),
-        assert(initialDate != null),
+  SmallCalendar._internal(
+      {@required this.initialDate,
+      @required this.firstWeekday,
+      this.dayStyle,
+      @required this.showWeekdayIndication,
+      @required this.weekdayIndicationHeight,
+      this.weekdayIndicationStyle,
+      @required this.dayNamesMap,
+      @required this.controller,
+      this.onDayPressed,
+      this.onDisplayedMonthChanged})
+      : assert(initialDate != null),
         assert(firstWeekday != null),
+        assert(showWeekdayIndication != null),
+        assert(weekdayIndicationHeight != null),
         assert((firstWeekday >= DateTime.MONDAY) &&
             (firstWeekday <= DateTime.SUNDAY)),
         assert(dayNamesMap != null),
-        assert(weekdayIndicationHeight != null),
-        assert(controller != null),
-        assert(key != null);
+        assert(controller != null);
 
   factory SmallCalendar({
-    int totalNumberOfMonths = 120,
-    bool showWeekdayIndication = true,
     DateTime initialDate,
     int firstWeekday = DateTime.monday,
     DayStyleData dayStyle,
+    bool showWeekdayIndication = true,
+    double weekdayIndicationHeight = 25.0,
     WeekdayIndicationStyleData weekdayIndicationStyle,
     Map<int, String> dayNamesMap = oneLetterEnglishDayNames,
-    double weekdayIndicationHeight = 25.0,
     SmallCalendarController controller,
-    DateCallback onDayPressed,
+    DateTimeCallback onDayPressed,
+    YearMonthCallback onDisplayedMonthChanged,
   }) {
     // checks that dayNamesMap contains a keyValue pair for every weekday
     if (showWeekdayIndication) {
       for (int i = DateTime.monday; i <= DateTime.sunday; i++) {
         if (!dayNamesMap.containsKey(i)) {
           throw new ArgumentError(
-              "dayNamesMap shuld contain a key-value pair for every weekday");
+            "dayNamesMap shuld contain a key-value pair for every weekday (missing value for weekday: $i)",
+          );
         }
       }
     }
@@ -93,19 +84,16 @@ class SmallCalendar extends StatefulWidget {
     initialDate = initialDate ?? new DateTime.now();
 
     return new SmallCalendar._internal(
-      totalNumberOfMonths: totalNumberOfMonths,
-      showWeekdayIndication: showWeekdayIndication,
       initialDate: initialDate,
       firstWeekday: firstWeekday,
       dayStyle: dayStyle,
+      showWeekdayIndication: showWeekdayIndication,
+      weekdayIndicationHeight: weekdayIndicationHeight,
       weekdayIndicationStyle: weekdayIndicationStyle,
       dayNamesMap: dayNamesMap,
-      weekdayIndicationHeight: weekdayIndicationHeight,
       controller: controller ?? new SmallCalendarController(),
       onDayPressed: onDayPressed,
-      key:
-          new Key("${initialDate.year}.${initialDate.month}.${initialDate.day};"
-              "totalNumOfMonths:$totalNumberOfMonths"),
+      onDisplayedMonthChanged: onDisplayedMonthChanged,
     );
   }
 
@@ -113,42 +101,41 @@ class SmallCalendar extends StatefulWidget {
   State createState() => new _SmallCalendarState();
 }
 
-class _SmallCalendarState extends State<SmallCalendar>
-    with SingleTickerProviderStateMixin {
-  List<Widget> tabs;
-  Month firstMonth;
-  TabController tabController;
+class _SmallCalendarState extends State<SmallCalendar> {
+  static const _initial_page = 1000000;
+
+  PageController pageController;
+  Month initialMonth;
+
+  List<int> weekdayIndicationDays;
 
   @override
   void initState() {
     super.initState();
 
-    int initialIndex = widget.totalNumberOfMonths ~/ 2;
+    initPageController();
+    initInitialMonth();
+    initWeekdayIndicationDays();
 
-    Month initialMonth = new Month(
-      widget.initialDate.year,
-      widget.initialDate.month,
-    );
+    widget.controller.addGoToDateListener(onGoToDate);
+  }
 
-    firstMonth = generateMonthXMonthsAgo(
-      initialMonth,
-      widget.totalNumberOfMonths - initialIndex,
-    );
+  void initPageController() {
+    pageController = new PageController(initialPage: _initial_page);
+    pageController.addListener(onPageChanged);
+  }
 
-    tabController = new TabController(
-      length: widget.totalNumberOfMonths,
-      initialIndex: initialIndex,
-      vsync: this,
-    );
+  void initInitialMonth() {
+    initialMonth = new Month.fromDateTime(widget.initialDate);
+  }
 
-    tabs = generateTabs();
-
-    registerGoToListener();
+  void initWeekdayIndicationDays() {
+    weekdayIndicationDays = generateWeekdays(widget.firstWeekday);
   }
 
   @override
   void dispose() {
-    removeGoToListener();
+    widget.controller.removeGoToDateListener(onGoToDate);
 
     super.dispose();
   }
@@ -158,67 +145,59 @@ class _SmallCalendarState extends State<SmallCalendar>
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.controller != widget.controller) {
-      registerGoToListener();
+      oldWidget.controller.removeGoToDateListener(onGoToDate);
+      widget.controller.addGoToDateListener(onGoToDate);
     }
 
-    bool makeNewTabs = false;
-    makeNewTabs = makeNewTabs ||
-        oldWidget.showWeekdayIndication != widget.showWeekdayIndication;
-    makeNewTabs = makeNewTabs || oldWidget.dayNamesMap != widget.dayNamesMap;
-    makeNewTabs = makeNewTabs || oldWidget.firstWeekday != widget.firstWeekday;
-    makeNewTabs = makeNewTabs ||
-        oldWidget.weekdayIndicationHeight != widget.weekdayIndicationHeight;
-    makeNewTabs = makeNewTabs || oldWidget.controller != widget.controller;
-    makeNewTabs = makeNewTabs || oldWidget.onDayPressed != widget.onDayPressed;
-    if (makeNewTabs) {
-      setState(() {
-        tabs = generateTabs();
-      });
+    bool shouldRefresh = false;
+    if (oldWidget.firstWeekday != widget.firstWeekday) {
+      shouldRefresh = true;
+      initWeekdayIndicationDays();
+    }
+    if (oldWidget.initialDate != widget.initialDate) {
+      shouldRefresh = true;
+      initPageController();
+      initInitialMonth();
+    }
+
+    if (shouldRefresh) {
+      setState(() {});
     }
   }
 
-  void registerGoToListener() {
-    widget.controller.addGoToListener(changeToTabThatDisplaysDate);
-  }
+  void onPageChanged() {
+    if (widget.onDisplayedMonthChanged != null) {
+      int page = pageController.page.toInt();
 
-  void removeGoToListener() {
-    widget.controller.removeGoToListener(changeToTabThatDisplaysDate);
-  }
-
-  void changeToTabThatDisplaysDate(DateTime date) {
-    int desiredTabNumber;
-
-    if (date.isBefore(new DateTime(firstMonth.year, firstMonth.month))) {
-      desiredTabNumber = 0;
-    } else {
-      desiredTabNumber = getDifferenceOfMonths(
-        firstMonth,
-        new Month.fromDateTime(date),
-        widget.totalNumberOfMonths,
+      Month displayedMonth = initialMonth.add(
+        page - _initial_page,
       );
 
-      if (desiredTabNumber >= tabController.length) {
-        desiredTabNumber = tabController.length - 1;
-      }
+      widget.onDisplayedMonthChanged(
+        displayedMonth.year,
+        displayedMonth.month,
+      );
     }
-
-    tabController.animateTo(desiredTabNumber);
   }
 
-  List<Widget> generateTabs() {
-    return generateMonths(firstMonth, widget.totalNumberOfMonths)
-        .map(
-          (month) => new SmallCalendarTab(
-                showWeekdayIndication: widget.showWeekdayIndication,
-                dayNames: widget.dayNamesMap,
-                firstWeekday: widget.firstWeekday,
-                weekdayIndicationHeight: widget.weekdayIndicationHeight,
-                controller: widget.controller,
-                month: month,
-                onDayPressed: widget.onDayPressed,
-              ),
-        )
-        .toList();
+  void onGoToDate(DateTime date) {
+    Month desiredMonth = new Month.fromDateTime(date);
+
+    int difference = Month.getDifference(initialMonth, desiredMonth);
+    pageController.jumpToPage(_initial_page + difference);
+  }
+
+  Widget monthCalendarBuilder(BuildContext context, int index) {
+    return new MonthCalendar(
+      month: initialMonth.add(index - _initial_page),
+      firstWeekday: widget.firstWeekday,
+      controller: widget.controller,
+      showWeekdayIndication: widget.showWeekdayIndication,
+      weekdayIndicationDays: weekdayIndicationDays,
+      dayNames: widget.dayNamesMap,
+      weekdayIndicationHeight: widget.weekdayIndicationHeight,
+      onDayPressed: widget.onDayPressed,
+    );
   }
 
   @override
@@ -227,9 +206,9 @@ class _SmallCalendarState extends State<SmallCalendar>
       child: new SmallCalendarStyle(
         dayStyleData: widget.dayStyle,
         weekdayIndicationStyleData: widget.weekdayIndicationStyle,
-        child: new TabBarView(
-          controller: tabController,
-          children: generateTabs(),
+        child: new PageView.builder(
+          itemBuilder: monthCalendarBuilder,
+          controller: pageController,
         ),
       ),
     );
