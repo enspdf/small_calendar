@@ -1,6 +1,6 @@
 name: small_calendar
 description: Small Calendar widget. With ability to display weekday indication and some basic info about every day.
-version: 0.0.4
+version: 0.3.0
 author: ZedTheLed <kukumoraketo@gmail.com>
 homepage: https://github.com/ZedTheLed/small_calendar
 

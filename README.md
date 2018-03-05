@@ -10,7 +10,7 @@ small_calendar widget.
 
 ```yaml
 dependencies:
-    small_calendar: "^0.1.0"
+    small_calendar: "^0.3.0"
 ```
 
 ### Import It
