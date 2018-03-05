@@ -10,21 +10,22 @@ import 'small_calendar_style.dart';
 
 class DayWidget extends StatelessWidget {
   final DayData dayData;
-  final DayCallback onPressed;
+  final DateTimeCallback onPressed;
 
   DayWidget({
     @required this.dayData,
     @required this.onPressed,
-  });
+  })
+      : super(key: new ObjectKey(dayData.day));
 
   @override
   Widget build(BuildContext context) {
     bool showTicks = SmallCalendarStyle.of(context).dayStyleData.showTicks;
 
     VoidCallback onTap;
-    if (onTap != null) {
+    if (onPressed != null) {
       onTap = () {
-        onPressed(dayData.day);
+        onPressed(dayData.day.toDateTime());
       };
     }
 

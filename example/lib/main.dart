@@ -28,22 +28,24 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
 
   Widget createSmallCalendar(BuildContext context) {
     return new SmallCalendar(
-      showWeekdayIndication: showWeekdayIndication,
-      controller: smallCalendarController,
       firstWeekday: DateTime.monday,
-      weekdayIndicationStyle: new WeekdayIndicationStyleData(
-          backgroundColor: Theme.of(context).primaryColor,
-          textStyle: new TextStyle(color: Colors.grey[300])),
+      controller: smallCalendarController,
       dayStyle: new DayStyleData(
         showTicks: showTicks,
-        tick3Color: Colors.orange,
+        tick3Color: Colors.yellow[700],
       ),
+      showWeekdayIndication: showWeekdayIndication,
+      weekdayIndicationStyle: new WeekdayIndicationStyleData(
+          backgroundColor: Theme.of(context).primaryColor),
       onDayPressed: (DateTime date) {
-        Scaffold.of(context).showSnackBar(
-              new SnackBar(
-                content: new Text("Pressed on ${date.year}.${date.month}.${date.day}"),
+        Scaffold.of(context).showSnackBar(new SnackBar(
+              content: new Text(
+                "Pressed on ${date.year}.${date.month}.${date.day}",
               ),
-            );
+            ));
+      },
+      onDisplayedMonthChanged: (int year, int month){
+        print("Displaying $year.$month");
       },
     );
   }
@@ -57,9 +59,9 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
           title: new Text("small_calendar example"),
         ),
         body:
-        // Creates an inner BuildContext so that the onDayPressed method in SmallCalendar
-        // can refer to the Scaffold with Scaffold.of().
-        new Builder(
+            // Creates an inner BuildContext so that the onDayPressed method in SmallCalendar
+            // can refer to the Scaffold with Scaffold.of().
+            new Builder(
           builder: (BuildContext context) {
             return new Column(
               children: <Widget>[
@@ -146,14 +148,6 @@ class _SmallCalendarExampleAppState extends State<SmallCalendarExampleApp> {
 }
 
 SmallCalendarController createSmallCalendarController() {
-  Future<bool> isSelectedCallback(DateTime date) async {
-    if (date.day == 10) {
-      return true;
-    }
-
-    return false;
-  }
-
   Future<bool> hasTick1Callback(DateTime date) async {
     if (date.day == 1 || date.day == 4 || date.day == 5) {
       return true;
@@ -179,7 +173,13 @@ SmallCalendarController createSmallCalendarController() {
   }
 
   return new SmallCalendarController(
-    isSelectedCallback: isSelectedCallback,
+    isSelectedCallback: (DateTime date) async {
+      if (date.day == 10) {
+        return true;
+      }
+
+      return false;
+    },
     hasTick1Callback: hasTick1Callback,
     hasTick2Callback: hasTick2Callback,
     hasTick3Callback: hasTick3Callback,

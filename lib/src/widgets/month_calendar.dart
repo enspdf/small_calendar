@@ -12,7 +12,9 @@ import 'weekday_indicator.dart';
 import 'day_widget.dart';
 
 class MonthCalendar extends StatefulWidget {
-  final MonthData monthData;
+  final Month month;
+
+  final int firstWeekday;
 
   final SmallCalendarController controller;
 
@@ -21,10 +23,11 @@ class MonthCalendar extends StatefulWidget {
   final Map<int, String> dayNames;
   final double weekdayIndicationHeight;
 
-  final DayCallback onDayPressed;
+  final DateTimeCallback onDayPressed;
 
   MonthCalendar({
-    @required this.monthData,
+    @required this.month,
+    @required this.firstWeekday,
     @required this.controller,
     @required this.showWeekdayIndication,
     @required this.weekdayIndicationDays,
@@ -32,7 +35,7 @@ class MonthCalendar extends StatefulWidget {
     @required this.weekdayIndicationHeight,
     @required this.onDayPressed,
   })
-      : super(key: new ObjectKey(monthData));
+      : super(key: new ObjectKey(month));
 
   @override
   State createState() => new _MonthCalendarState();
@@ -48,16 +51,10 @@ class _MonthCalendarState extends State<MonthCalendar> {
 
     isActive = true;
 
+    days = generateDays();
     widget.controller.addDayRefreshListener(onRefreshDays);
 
-    days = generateExtendedDaysOfMonth(
-      widget.monthData.month,
-      widget.monthData.firstWeekday,
-    )
-        .map((day) => new DayData(day: day))
-        .toList();
-
-    updateDays();
+    refreshDaysData();
   }
 
   @override
@@ -76,9 +73,27 @@ class _MonthCalendarState extends State<MonthCalendar> {
       oldWidget.controller.removeDayRefreshListener(onRefreshDays);
       widget.controller.addDayRefreshListener(onRefreshDays);
     }
+
+    if (oldWidget.firstWeekday != widget.firstWeekday) {
+      days = generateDays();
+      refreshDaysData();
+    }
   }
 
-  Future updateDays() async {
+  void onRefreshDays() {
+    refreshDaysData();
+  }
+
+  List<DayData> generateDays() {
+    return generateExtendedDaysOfMonth(
+      widget.month,
+      widget.firstWeekday,
+    )
+        .map((day) => new DayData(day: day))
+        .toList();
+  }
+
+  Future refreshDaysData() async {
     for (int i = 0; i < days.length; i++) {
       updateIsHasOfDay(days[i]).then((updatedDay) {
         if (!isActive) return;
@@ -99,10 +114,6 @@ class _MonthCalendarState extends State<MonthCalendar> {
       hasTick2: await widget.controller.hasTick2(dateTime),
       hasTick3: await widget.controller.hasTick3(dateTime),
     );
-  }
-
-  void onRefreshDays() {
-    updateDays();
   }
 
   @override
@@ -151,10 +162,17 @@ class _MonthCalendarState extends State<MonthCalendar> {
   List<Widget> generateWeeks() {
     List<Widget> r = <Widget>[];
 
-    // TODO here
+    for (int i = 0; i < days.length; i += 7) {
+      Iterable<DayData> daysOfWeek = days.getRange(i, i + 7);
+      r.add(
+        generateWeek(daysOfWeek),
+      );
+    }
+
+    return r;
   }
 
-  Widget generateWeek(List<DayData> daysOfWeek) {
+  Widget generateWeek(Iterable<DayData> daysOfWeek) {
     return new Expanded(
       child: new Row(
         children: daysOfWeek

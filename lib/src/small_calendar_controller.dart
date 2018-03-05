@@ -21,7 +21,7 @@ class SmallCalendarController {
   /// Future that returns true if there is a tick3 associated with specific date.
   final IsHasCallback hasTick3Callback;
 
-  Set<DateCallback> _goToListeners = new Set<DateCallback>();
+  Set<DateTimeCallback> _goToListeners = new Set<DateTimeCallback>();
 
   Set<VoidCallback> _dayRefreshListeners = new Set<VoidCallback>();
 
@@ -35,16 +35,16 @@ class SmallCalendarController {
 
   // for listeners -------------------------------------------------------------
 
-  void addGoToListener(DateCallback listener) {
+  void addGoToDateListener(DateTimeCallback listener) {
     _goToListeners.add(listener);
   }
 
-  void removeGoToListener(DateCallback listener) {
+  void removeGoToDateListener(DateTimeCallback listener) {
     _goToListeners.remove(listener);
   }
 
-  void _notifyGoToListener(DateTime dateToGoTo) {
-    for (DateCallback listener in _goToListeners) {
+  void _notifyGoToDateListeners(DateTime dateToGoTo) {
+    for (DateTimeCallback listener in _goToListeners) {
       if (listener != null) {
         listener(dateToGoTo);
       }
@@ -122,15 +122,15 @@ class SmallCalendarController {
   /// [SmallCalendar] displays month that shows [date].
   ///
   /// If month with specific [date] cannot be displayed, it shows the nearest month.
-  void goTo(DateTime date) {
-    _notifyGoToListener(date);
+  void goToDate(DateTime date) {
+    _notifyGoToDateListeners(date);
   }
 
   /// [SmallCalendar] displays month that shows today's date.
   ///
   /// If month with today's date cannot be displayed, it shows the nearest month.
   void goToToday() {
-    goTo(new DateTime.now());
+    goToDate(new DateTime.now());
   }
 
   // refresh -------------------------------------------------------------------

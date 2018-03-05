@@ -53,3 +53,16 @@ DateTime _lowerToFirstWeekday(DateTime day, int firstWeekday) {
 
   return day;
 }
+
+/// Generates list of all weekday (monday-sunday) starting with [firstWeekday].
+List<int> generateWeekdays(int firstWeekday) {
+  List<int> r = <int>[];
+
+  int zeroBasedFirstWeekday = firstWeekday - 1;
+
+  for (int i = 0; i < 7; i++) {
+    r.add((((zeroBasedFirstWeekday + i) % 7)) + 1);
+  }
+
+  return r;
+}

@@ -69,4 +69,36 @@ class Month {
   String toString() {
     return "$year.$month";
   }
+
+  bool isBefore(Month other) {
+    if (year < other.year) {
+      return true;
+    }
+
+    if (year > other.year) {
+      return false;
+    }
+
+    return month < other.month;
+  }
+
+  static int getDifference(Month month1, Month month2) {
+    if (month1 == month2) {
+      return 0;
+    }
+
+    if (month1.isBefore(month2)) {
+      int r = 1;
+      while (month1.add(r) != month2) {
+        r++;
+      }
+      return r;
+    } else {
+      int r = -1;
+      while (month1.add(r) != month2) {
+        r--;
+      }
+      return r;
+    }
+  }
 }
