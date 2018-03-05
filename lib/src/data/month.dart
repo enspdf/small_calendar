@@ -1,5 +1,4 @@
 import 'package:meta/meta.dart';
-import 'package:quiver/core.dart';
 
 @immutable
 class Month {
@@ -49,21 +48,16 @@ class Month {
   int get _monthBase0 => month - 1;
 
   @override
-  int get hashCode {
-    return hashObjects([
-      year,
-      month,
-    ]);
-  }
-
-  @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (other is Month) {
-      return other.year == year && other.month == month;
+      return year == other.year && month == other.month;
     } else {
       return false;
     }
   }
+
+  @override
+  int get hashCode => year.hashCode ^ month.hashCode;
 
   @override
   String toString() {

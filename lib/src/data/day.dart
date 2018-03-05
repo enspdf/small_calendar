@@ -37,7 +37,9 @@ class Day {
   @override
   bool operator ==(Object other) {
     if (other is Day) {
-      return hashCode == other.hashCode;
+      return month == other.month &&
+          day == other.day &&
+          isExtended == other.isExtended;
     } else {
       return false;
     }

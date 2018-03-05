@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  quiver: "^0.28.0"
   meta: "^1.1.1"
 
 dev_dependencies:
