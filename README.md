@@ -12,18 +12,6 @@ small_calendar widget.
 3. In pageBuilder of SmallCalendarPager create a new SmallCalendar
 4. If you wish to display SmallCalendar for only one Month (without the ability to swipe between months), omit the SmallCalendarPager.
 
-new SmallCalendarData(
-  child: new SmallCalendarStyle(
-    child: new SmallCalendarPager(
-      pageBuilder: (BuildContext context, DateTime month) {
-        return new SmallCalendar(
-            month: month,
-          );
-        },
-    ),
-  ),
-);
-
 ### Add Dependency
 
 ```yaml
