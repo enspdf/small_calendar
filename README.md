@@ -6,6 +6,12 @@ small_calendar widget.
 
 ## Usage
 
+1. Create new SmallCalendarData (this widget provides data to SmallCalendar-s down the widget tree)
+(Optionally) Create SmallCalendarStyle (to change the looks of SmallCalendar)
+2. Create SmallCalendarPager (to enable swiping between months)
+3. In pageBuilder of SmallCalendarPager create a new SmallCalendar
+4. If you wish to display SmallCalendar for only one Month (without the ability to swipe between months), omit the SmallCalendarPager.
+
 ### Add Dependency
 
 ```yaml
